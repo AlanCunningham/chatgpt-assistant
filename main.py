@@ -131,7 +131,7 @@ if __name__ == "__main__":
             recognised_speech = speech_result.recognize_google(audio)
             print(recognised_speech)
             send_to_assistant(client, assistant, assistant_thread, recognised_speech)
-        except speech_result.UnknownValueError:
+        except speech_recognition.UnknownValueError:
             print("Could not understand audio")
-        except speech_result.RequestError as e:
+        except speech_recognition.RequestError as e:
             print(f"Error: {e}")
