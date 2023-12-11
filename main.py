@@ -20,7 +20,6 @@ def generate_chatgpt_image(openai_client, user_text, assistant_output_text):
     Generates a dall-e image based on given text (usually the output of the
     GPT assistant)
     """
-    global image_thread
     print("Generating image")
     image_prompt = (
         f"{prompts.assistant_image_prompt}\n{user_text}\n{assistant_output_text}"
@@ -90,11 +89,12 @@ def send_to_assistant(openai_client, assistant, assistant_thread, input_text):
             run_completed = True
         time.sleep(1)
 
-    global image_thread
     thread_messages = openai_client.beta.threads.messages.list(assistant_thread.id)
     # The most recent assistant's response will be the first item in the list
     assistant_output = thread_messages.data[0].content[0].text.value
     print(assistant_output)
+
+    global image_thread
     image_thread = threading.Thread(
         target=generate_chatgpt_image, args=(client, input_text, assistant_output)
     )
@@ -118,8 +118,8 @@ if __name__ == "__main__":
     assistant = get_assistant(client)
     assistant_thread = client.beta.threads.create()
 
-    # test_input = "Tell me about Caerleon"
-    # send_to_assistant(client, assistant, test_input)
+    # test_input = "An interesting fact"
+    # send_to_assistant(client, assistant, assistant_thread, test_input)
 
     running = True
     while running:
