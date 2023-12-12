@@ -21,6 +21,15 @@ from pathlib import Path
 image_thread = None
 
 
+def play_audio(audio_file_path):
+    player = vlc.MediaPlayer(audio_file_path)
+    player.play()
+    time.sleep(1)
+    # Ensure the program doesn't cut off the text to speech
+    while player.is_playing():
+        time.sleep(1)
+
+
 def generate_chatgpt_image(openai_client, user_text, assistant_output_text):
     """
     Generates a dall-e image based on given text (usually the output of the
@@ -70,12 +79,7 @@ def whisper_text_to_speech(openai_client, text_to_say):
     )
     response.stream_to_file(speech_file_path)
 
-    player = vlc.MediaPlayer(speech_file_path)
-    player.play()
-    time.sleep(1)
-    # Ensure the program doesn't cut off the text to speech
-    while player.is_playing():
-        time.sleep(1)
+    play_audio(speech_file_path)
 
 
 def send_to_assistant(openai_client, assistant, assistant_thread, input_text):
@@ -174,6 +178,7 @@ if __name__ == "__main__":
             if not result:
                 continue
             if result["match"]:
+                play_audio("audio/start.wav")
                 waiting_for_hotword = False
                 print("Hotword uttered")
         else:
@@ -185,6 +190,7 @@ if __name__ == "__main__":
             try:
                 recognised_speech = speech_result.recognize_google(audio)
                 print(recognised_speech)
+                play_audio("audio/confirmation.wav")
                 waiting_for_hotword = True
                 first_session_listen = True
                 send_to_assistant(
