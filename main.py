@@ -86,7 +86,13 @@ def send_to_assistant(openai_client, assistant, assistant_thread, input_text):
     )
 
     run_completed = False
+    timeout_limit = 10
+    timeout_counter = 0
     while not run_completed:
+        if timeout_counter >= timeout_limit:
+            print("Timeout exceeded")
+            timeout_counter = 0
+            break
         run = openai_client.beta.threads.runs.retrieve(
             thread_id=assistant_thread.id,
             run_id=run.id,
@@ -94,10 +100,14 @@ def send_to_assistant(openai_client, assistant, assistant_thread, input_text):
         if run.status == "completed":
             run_completed = True
         time.sleep(1)
+        timeout_counter += 1
 
-    thread_messages = openai_client.beta.threads.messages.list(assistant_thread.id)
-    # The most recent assistant's response will be the first item in the list
-    assistant_output = thread_messages.data[0].content[0].text.value
+    if timeout_counter >= timeout_limit:
+        assistant_output = "Sorry, it looks like something went wrong. Try again in a moment or two."
+    else:
+        thread_messages = openai_client.beta.threads.messages.list(assistant_thread.id)
+        # The most recent assistant's response will be the first item in the list
+        assistant_output = thread_messages.data[0].content[0].text.value
     print(assistant_output)
 
     global image_thread
