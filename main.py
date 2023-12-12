@@ -149,7 +149,7 @@ if __name__ == "__main__":
 
     mic_stream = SimpleMicStream(
         window_length_secs=1.5,
-        sliding_window_secs=0.75,
+        sliding_window_secs=1,
     )
     mic_stream.start_stream()
 
