@@ -60,6 +60,9 @@ def get_assistant(openai_client):
 
 
 def whisper_text_to_speech(openai_client, text_to_say):
+    """
+    Text to speech using OpenAI's Whisper API.
+    """
     print("whisper_text_to_speech")
     speech_file_path = Path(__file__).parent / "speech.mp3"
     response = openai_client.audio.speech.create(
@@ -76,6 +79,10 @@ def whisper_text_to_speech(openai_client, text_to_say):
 
 
 def send_to_assistant(openai_client, assistant, assistant_thread, input_text):
+    """
+    Send text to an OpenAI Assistant and gets the response to pass to Whisper
+    and Dall-E.
+    """
     message = openai_client.beta.threads.messages.create(
         thread_id=assistant_thread.id, role="user", content=input_text
     )
