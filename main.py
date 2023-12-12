@@ -114,7 +114,9 @@ def send_to_assistant(openai_client, assistant, assistant_thread, input_text):
         timeout_counter += 1
 
     if timeout_counter >= timeout_limit:
-        assistant_output = "Sorry, it looks like something went wrong. Try again in a moment or two."
+        assistant_output = (
+            "Sorry, it looks like something went wrong. Try again in a moment or two."
+        )
     else:
         thread_messages = openai_client.beta.threads.messages.list(assistant_thread.id)
         # The most recent assistant's response will be the first item in the list
