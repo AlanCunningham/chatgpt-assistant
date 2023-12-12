@@ -7,6 +7,12 @@ import shutil
 import settings
 import subprocess
 import speech_recognition
+import os
+from eff_word_net.streams import SimpleMicStream
+from eff_word_net.engine import HotwordDetector
+from eff_word_net.audio_processing import Resnet50_Arc_loss
+import eff_word_net.audio_processing
+from eff_word_net import samples_loc
 from openai import OpenAI
 import threading
 from pathlib import Path
@@ -121,17 +127,53 @@ if __name__ == "__main__":
     # test_input = "An interesting fact"
     # send_to_assistant(client, assistant, assistant_thread, test_input)
 
+    # Set up hotword detection
+    base_model = Resnet50_Arc_loss()
+    mycroft_hotword = HotwordDetector(
+        hotword="mycroft",
+        model=base_model,
+        reference_file=os.path.join(samples_loc, "mycroft_ref.json"),
+        threshold=0.7,
+        relaxation_time=2,
+    )
+
+    mic_stream = SimpleMicStream(
+        window_length_secs=1.5,
+        sliding_window_secs=0.75,
+    )
+    mic_stream.start_stream()
+
     running = True
+    waiting_for_hotword = True
+    first_session_listen = True
     while running:
-        speech_result = speech_recognition.Recognizer()
-        with speech_recognition.Microphone() as source:
-            print("Ready for input")
-            audio = speech_result.listen(source)
-        try:
-            recognised_speech = speech_result.recognize_google(audio)
-            print(recognised_speech)
-            send_to_assistant(client, assistant, assistant_thread, recognised_speech)
-        except speech_recognition.UnknownValueError:
-            print("Could not understand audio")
-        except speech_recognition.RequestError as e:
-            print(f"Error: {e}")
+        if waiting_for_hotword:
+            if first_session_listen:
+                print("Waiting for hotword...")
+                first_session_listen = False
+            # Wait for the hotword
+            frame = mic_stream.getFrame()
+            result = mycroft_hotword.scoreFrame(frame)
+            if not result:
+                continue
+            if result["match"]:
+                waiting_for_hotword = False
+                print("Hotword uttered")
+        else:
+            # Hotword detected, continue with speech recognition
+            print("Ready for input:")
+            speech_result = speech_recognition.Recognizer()
+            with speech_recognition.Microphone() as source:
+                audio = speech_result.listen(source)
+            try:
+                recognised_speech = speech_result.recognize_google(audio)
+                print(recognised_speech)
+                waiting_for_hotword = True
+                first_session_listen = True
+                send_to_assistant(
+                    client, assistant, assistant_thread, recognised_speech
+                )
+            except speech_recognition.UnknownValueError:
+                print("Could not understand audio")
+            except speech_recognition.RequestError as e:
+                print(f"Error: {e}")
