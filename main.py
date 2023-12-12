@@ -41,7 +41,7 @@ def generate_chatgpt_image(openai_client, user_text, assistant_output_text):
     )
 
     response = openai_client.images.generate(
-        model="dall-e-3",
+        model="dall-e-2",
         prompt=image_prompt,
         size="1024x1024",
         quality="standard",
@@ -147,6 +147,10 @@ if __name__ == "__main__":
 
     # test_input = "An interesting fact"
     # send_to_assistant(client, assistant, assistant_thread, test_input)
+
+    # Speech recognition setup
+    recogniser = speech_recognition.Recognizer()
+    microphone = speech_recognition.Microphone()
 
     # Set up hotword detection
     base_model = Resnet50_Arc_loss()
