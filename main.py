@@ -38,7 +38,7 @@ def generate_chatgpt_image(openai_client, user_text, assistant_output_text):
     )
 
     response = openai_client.images.generate(
-        model="dall-e-2",
+        model="dall-e-3",
         prompt=image_prompt,
         size="1024x1024",
         quality="standard",
@@ -53,7 +53,7 @@ def generate_chatgpt_image(openai_client, user_text, assistant_output_text):
         with open("dalle_image.png", "wb") as image_file:
             response.raw.decode_content = True
             shutil.copyfileobj(response.raw, image_file)
-        subprocess.call(f"sudo fbi -a -T 1 dalle_image.png &", shell=True)
+        subprocess.call(f"sudo fbi -T 1 dalle_image.png --noverbose &", shell=True)
 
 
 def get_assistant(openai_client):
