@@ -2,6 +2,7 @@ import logging
 import time
 import vlc
 import prompts
+import random
 import requests
 import shutil
 import settings
@@ -216,7 +217,12 @@ if __name__ == "__main__":
                     cancel_phrase in recognised_speech
                     for cancel_phrase in cancel_phrases
                 ):
-                    play_audio("audio/oh_ok.mp3")
+                    end_conversation_phrases = [
+                        "audio/oh_ok.mp3",
+                        "audio/alright_then.mp3",
+                        "audio/nevermind.mp3",
+                    ]
+                    play_audio(random.choice(end_conversation_phrases))
                 else:
                     play_audio("audio/hmm.mp3")
                     send_to_assistant(
