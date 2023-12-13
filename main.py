@@ -53,7 +53,7 @@ def generate_chatgpt_image(openai_client, user_text, assistant_output_text):
         with open("dalle_image.png", "wb") as image_file:
             response.raw.decode_content = True
             shutil.copyfileobj(response.raw, image_file)
-        subprocess.call(f"feh -F dalle_image.png &", shell=True)
+        subprocess.call(f"sudo fbi -a -T 1 dalle_image.png &", shell=True)
 
 
 def get_assistant(openai_client):
@@ -186,6 +186,7 @@ if __name__ == "__main__":
                 handle.delete()
         else:
             # Hotword detected, continue with speech recognition
+            play_audio("audio/what.mp3")
             microphone = speech_recognition.Microphone()
             speech_result = speech_recognition.Recognizer()
             
@@ -195,7 +196,7 @@ if __name__ == "__main__":
             try:
                 recognised_speech = speech_result.recognize_google(audio)
                 print(recognised_speech)
-                play_audio("audio/confirmation.wav")
+                play_audio("audio/hmm.mp3")
                 wait_for_hotword = True
                 first_session_listen = True
                 send_to_assistant(
