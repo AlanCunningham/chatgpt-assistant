@@ -169,7 +169,7 @@ if __name__ == "__main__":
                 print(pvporcupine.KEYWORDS)
                 pvporcupine_api_key = settings.pvporcupine_api_key
                 handle = pvporcupine.create(
-                    access_key=pvporcupine_api_key, keywords=["porcupine", "alexa"]
+                    access_key=pvporcupine_api_key, keywords=["porcupine"]
                 )
 
                 hotword_recorder = PvRecorder(
