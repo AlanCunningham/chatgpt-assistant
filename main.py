@@ -8,11 +8,8 @@ import settings
 import subprocess
 import speech_recognition
 import os
-from eff_word_net.streams import SimpleMicStream
-from eff_word_net.engine import HotwordDetector
-from eff_word_net.audio_processing import Resnet50_Arc_loss
-import eff_word_net.audio_processing
-from eff_word_net import samples_loc
+import pvporcupine
+from pvrecorder import PvRecorder
 from openai import OpenAI
 import threading
 from pathlib import Path
@@ -150,54 +147,56 @@ if __name__ == "__main__":
     # test_input = "An interesting fact"
     # send_to_assistant(client, assistant, assistant_thread, test_input)
 
-    # Speech recognition setup
-    recogniser = speech_recognition.Recognizer()
-    microphone = speech_recognition.Microphone()
+    # List the recording devices
+    for i, device in enumerate(PvRecorder.get_available_devices()):
+        print("Device %d: %s" % (i, device))
 
-    # Set up hotword detection
-    base_model = Resnet50_Arc_loss()
-    mycroft_hotword = HotwordDetector(
-        hotword="mycroft",
-        model=base_model,
-        reference_file=os.path.join(samples_loc, "mycroft_ref.json"),
-        threshold=0.7,
-        relaxation_time=2,
-    )
-
-    mic_stream = SimpleMicStream(
-        window_length_secs=1.5,
-        sliding_window_secs=1,
-    )
-    mic_stream.start_stream()
+    # print("Listening")
+    # while True:
+    #     pcm = hotword_recorder.read()
+    #     result = handle.process(pcm)
+    #     if result >= 0:
+    #         print("Detected!")
 
     running = True
-    waiting_for_hotword = True
+    wait_for_hotword = True
     first_session_listen = True
     while running:
-        if waiting_for_hotword:
+        if wait_for_hotword:
             if first_session_listen:
+                # Hotword setup
+                print(pvporcupine.KEYWORDS)
+                pvporcupine_api_key = settings.pvporcupine_api_key
+                handle = pvporcupine.create(
+                    access_key=pvporcupine_api_key, keywords=["porcupine", "alexa"]
+                )
+
+                hotword_recorder = PvRecorder(frame_length=handle.frame_length, device_index=3)
+                hotword_recorder.start()
+
                 print("Waiting for hotword...")
                 first_session_listen = False
             # Wait for the hotword
-            frame = mic_stream.getFrame()
-            result = mycroft_hotword.scoreFrame(frame)
-            if not result:
-                continue
-            if result["match"]:
-                play_audio("audio/start.wav")
-                waiting_for_hotword = False
-                print("Hotword uttered")
+            pcm = hotword_recorder.read()
+            result = handle.process(pcm)
+            if result >= 0:
+                print("Detected!")
+                wait_for_hotword = False
+                hotword_recorder.delete()
+                handle.delete()
         else:
             # Hotword detected, continue with speech recognition
-            print("Ready for input:")
+            microphone = speech_recognition.Microphone()
             speech_result = speech_recognition.Recognizer()
-            with speech_recognition.Microphone() as source:
+            
+            print("Ready for input:")
+            with microphone as source:
                 audio = speech_result.listen(source)
             try:
                 recognised_speech = speech_result.recognize_google(audio)
                 print(recognised_speech)
                 play_audio("audio/confirmation.wav")
-                waiting_for_hotword = True
+                wait_for_hotword = True
                 first_session_listen = True
                 send_to_assistant(
                     client, assistant, assistant_thread, recognised_speech
