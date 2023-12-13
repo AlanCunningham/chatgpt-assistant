@@ -210,6 +210,7 @@ if __name__ == "__main__":
                     "stop",
                     "cancel that",
                     "cancel",
+                    "nothing",
                 ]
                 if any(
                     cancel_phrase in recognised_speech
