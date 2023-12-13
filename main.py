@@ -171,7 +171,9 @@ if __name__ == "__main__":
                     access_key=pvporcupine_api_key, keywords=["porcupine", "alexa"]
                 )
 
-                hotword_recorder = PvRecorder(frame_length=handle.frame_length, device_index=3)
+                hotword_recorder = PvRecorder(
+                    frame_length=handle.frame_length, device_index=3
+                )
                 hotword_recorder.start()
 
                 print("Waiting for hotword...")
@@ -189,19 +191,36 @@ if __name__ == "__main__":
             play_audio("audio/what.mp3")
             microphone = speech_recognition.Microphone()
             speech_result = speech_recognition.Recognizer()
-            
+
             print("Ready for input:")
             with microphone as source:
                 audio = speech_result.listen(source)
             try:
                 recognised_speech = speech_result.recognize_google(audio)
                 print(recognised_speech)
-                play_audio("audio/hmm.mp3")
                 wait_for_hotword = True
                 first_session_listen = True
-                send_to_assistant(
-                    client, assistant, assistant_thread, recognised_speech
-                )
+
+                # List of phrases to cancel the conversation before making
+                # requests to ChatGPT
+                cancel_phrases = [
+                    "nevermind",
+                    "never mind",
+                    "no",
+                    "stop",
+                    "cancel that",
+                    "cancel",
+                ]
+                if any(
+                    cancel_phrase in recognised_speech
+                    for cancel_phrase in cancel_phrases
+                ):
+                    play_audio("audio/oh_ok.mp3")
+                else:
+                    play_audio("audio/hmm.mp3")
+                    send_to_assistant(
+                        client, assistant, assistant_thread, recognised_speech
+                    )
             except speech_recognition.UnknownValueError:
                 print("Could not understand audio")
             except speech_recognition.RequestError as e:
