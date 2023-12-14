@@ -207,7 +207,6 @@ if __name__ == "__main__":
                 cancel_phrases = [
                     "nevermind",
                     "never mind",
-                    "no",
                     "stop",
                     "cancel that",
                     "cancel",
