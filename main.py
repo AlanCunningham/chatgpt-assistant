@@ -54,6 +54,9 @@ def generate_chatgpt_image(openai_client, user_text, assistant_output_text):
         with open("dalle_image.png", "wb") as image_file:
             response.raw.decode_content = True
             shutil.copyfileobj(response.raw, image_file)
+        # Close the existing image
+        subprocess.call(f"sudo killall -9 fbi", shell=True)
+        # Display the new image
         subprocess.call(f"sudo fbi -T 1 dalle_image.png --noverbose &", shell=True)
 
 
