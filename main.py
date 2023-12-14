@@ -10,6 +10,7 @@ import subprocess
 import speech_recognition
 import os
 import pvporcupine
+from PIL import Image
 from pvrecorder import PvRecorder
 from openai import OpenAI
 import threading
@@ -54,8 +55,15 @@ def generate_chatgpt_image(openai_client, user_text, assistant_output_text):
         with open("dalle_image.png", "wb") as image_file:
             response.raw.decode_content = True
             shutil.copyfileobj(response.raw, image_file)
+
+        # Resize the image to display on the smaller, 800x480 display. This
+        # doesn't maintain the aspect ratio.
+        image = Image.open("dalle_image.png")
+        resized_image = image.resize((800, 480))
+        resized_image.save("resized.png")
+
         # Display the new image
-        subprocess.call(f"sudo fbi -T 1 dalle_image.png --noverbose &", shell=True)
+        subprocess.call(f"sudo fbi -T 1 resized.png --noverbose &", shell=True)
 
 
 def get_assistant(openai_client):
