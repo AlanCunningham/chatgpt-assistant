@@ -1,5 +1,6 @@
 annotated-types==0.5.0
 anyio==3.7.1
+apprise==1.6.0
 black==23.3.0
 certifi==2023.11.17
 cffi==1.15.1
@@ -15,9 +16,11 @@ httpx==0.24.1
 humanfriendly==10.0
 idna==3.6
 importlib-metadata==6.7.0
+Markdown==3.5.1
 mpmath==1.3.0
 mypy-extensions==1.0.0
 numpy==1.21.6
+oauthlib==3.2.2
 onnxruntime==1.14.1
 openai==1.3.7
 packaging==23.2
@@ -33,7 +36,9 @@ pycparser==2.21
 pydantic==2.5.2
 pydantic-core==2.14.5
 python-vlc==3.0.20123
+PyYAML==6.0.1
 requests==2.26.0
+requests-oauthlib==1.3.1
 ruamel.yaml==0.18.5
 ruamel.yaml.clib==0.2.8
 sniffio==1.3.0

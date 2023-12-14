@@ -10,6 +10,7 @@ import subprocess
 import speech_recognition
 import os
 import pvporcupine
+import apprise_sender
 from PIL import Image
 from pvrecorder import PvRecorder
 from openai import OpenAI
@@ -161,16 +162,10 @@ if __name__ == "__main__":
     for i, device in enumerate(PvRecorder.get_available_devices()):
         print("Device %d: %s" % (i, device))
 
-    # print("Listening")
-    # while True:
-    #     pcm = hotword_recorder.read()
-    #     result = handle.process(pcm)
-    #     if result >= 0:
-    #         print("Detected!")
-
     running = True
     wait_for_hotword = True
     first_session_listen = True
+
     while running:
         if wait_for_hotword:
             if first_session_listen:
@@ -226,12 +221,17 @@ if __name__ == "__main__":
                     cancel_phrase in recognised_speech
                     for cancel_phrase in cancel_phrases
                 ):
+                    # Cancel the conversation
                     end_conversation_phrases = [
                         "audio/oh_ok.mp3",
                         "audio/alright_then.mp3",
                         "audio/nevermind.mp3",
                     ]
                     play_audio(random.choice(end_conversation_phrases))
+                elif "send" in recognised_speech:
+                    # Send the last created dall-e image to Telegram
+                    play_audio("audio/sending_image.mp3")
+                    apprise_sender.send("", "", "dalle_image.png")
                 else:
                     play_audio("audio/hmm.mp3")
                     send_to_assistant(
