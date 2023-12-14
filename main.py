@@ -217,6 +217,13 @@ if __name__ == "__main__":
                     "nothing",
                     "forget it",
                 ]
+
+                # List of phrases to send the dall-e image to telegram
+                send_image_phrases = [
+                    "send",
+                    "telegram",
+                ]
+
                 if any(
                     cancel_phrase in recognised_speech
                     for cancel_phrase in cancel_phrases
@@ -228,7 +235,10 @@ if __name__ == "__main__":
                         "audio/nevermind.mp3",
                     ]
                     play_audio(random.choice(end_conversation_phrases))
-                elif "send" in recognised_speech:
+                elif any(
+                    send_image_phrase in recognised_speech
+                    for send_image_phrase in send_image_phrases
+                ):
                     # Send the last created dall-e image to Telegram
                     play_audio("audio/sending_image.mp3")
                     apprise_sender.send("", "", "dalle_image.png")
