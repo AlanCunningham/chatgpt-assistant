@@ -193,7 +193,11 @@ if __name__ == "__main__":
                 handle.delete()
         else:
             # Hotword detected, continue with speech recognition
-            play_audio("audio/what.mp3")
+            hotword_responses = [
+                "audio/what.mp3",
+                "audio/yes_question.mp3",
+            ]
+            play_audio(random.choice(hotword_responses))
             microphone = speech_recognition.Microphone()
             speech_result = speech_recognition.Recognizer()
 
@@ -232,7 +236,6 @@ if __name__ == "__main__":
                     end_conversation_phrases = [
                         "audio/oh_ok.mp3",
                         "audio/alright_then.mp3",
-                        "audio/nevermind.mp3",
                     ]
                     play_audio(random.choice(end_conversation_phrases))
                 elif any(
@@ -249,5 +252,7 @@ if __name__ == "__main__":
                     )
             except speech_recognition.UnknownValueError:
                 print("Could not understand audio")
+                wait_for_hotword = True
+                first_session_listen = True
             except speech_recognition.RequestError as e:
                 print(f"Error: {e}")
