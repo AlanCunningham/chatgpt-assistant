@@ -63,6 +63,8 @@ def generate_chatgpt_image(openai_client, user_text, assistant_output_text):
         resized_image = image.resize((800, 480))
         resized_image.save("resized.png")
 
+        # Remove the current image by killing the fbi process
+        subprocess.call(f"sudo killall -15 fbi", shell=True)
         # Display the new image
         subprocess.call(f"sudo fbi -T 1 resized.png --noverbose &", shell=True)
 
