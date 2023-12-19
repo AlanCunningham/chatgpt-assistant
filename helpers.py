@@ -22,4 +22,4 @@ def display_image(image_file_path):
     # Remove the current image by killing the fbi process
     subprocess.call(f"sudo killall -15 fbi", shell=True)
     # Display the new image
-    subprocess.call(f"sudo fbi -T 1 resized.png --noverbose &", shell=True)
+    subprocess.call(f"sudo fbi -T 1 {image_file_path} --noverbose &", shell=True)

@@ -28,6 +28,7 @@ def main():
     running = True
     wait_for_hotword = True
     first_session_listen = True
+    current_image = None
 
     while running:
         if wait_for_hotword:
@@ -127,8 +128,12 @@ def main():
                     for show_random_image_phrase in show_random_image_phrases
                 ):
                     # Pick a random saved image and display it on the screen
-                    random_image = random.choice(os.listdir("saved_images"))
-                    helpers.display_image(random_image)
+                    images = os.listdir("saved_images")
+                    if current_image:
+                        images.remove(current_image)
+                    random_image = random.choice(images)
+                    helpers.display_image(f"saved_images/{random_image}")
+                    current_image = random_image
 
                 else:
                     helpers.play_audio("audio/hmm.mp3")
