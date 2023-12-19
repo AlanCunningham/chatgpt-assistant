@@ -2,9 +2,12 @@ import apprise_sender
 import gpt
 import helpers
 import logging
+import os
 import random
 import settings
+import shutil
 import speech_recognition
+import time
 import pvporcupine
 from pvrecorder import PvRecorder
 from openai import OpenAI
@@ -90,6 +93,12 @@ def main():
                     "telegram",
                 ]
 
+                # List of phrases to display a random image from the saved
+                # images folder.
+                show_random_image_phrases = [
+                    "random",
+                ]
+
                 if any(
                     cancel_phrase in recognised_speech
                     for cancel_phrase in cancel_phrases
@@ -100,6 +109,7 @@ def main():
                         "audio/alright_then.mp3",
                     ]
                     helpers.play_audio(random.choice(end_conversation_phrases))
+
                 elif any(
                     send_image_phrase in recognised_speech
                     for send_image_phrase in send_image_phrases
@@ -107,6 +117,19 @@ def main():
                     # Send the last created dall-e image to Telegram
                     helpers.play_audio("audio/sending_image.mp3")
                     apprise_sender.send("", "", "dalle_image.png")
+
+                    # Save the image to the saved images folder
+                    filename = time.strftime("%Y%m%d-%H%M%S")
+                    shutil.copyfile("resized.png", f"saved_images/{filename}.png")
+
+                elif any(
+                    show_random_image_phrase in recognised_speech
+                    for show_random_image_phrase in show_random_image_phrases
+                ):
+                    # Pick a random saved image and display it on the screen
+                    random_image = random.choice(os.listdir("saved_images"))
+                    helpers.display_image(random_image)
+
                 else:
                     helpers.play_audio("audio/hmm.mp3")
                     gpt.send_to_assistant(
