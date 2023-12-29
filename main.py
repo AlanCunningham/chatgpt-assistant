@@ -18,6 +18,11 @@ def main():
     assistant = gpt.get_assistant(client)
     assistant_thread = client.beta.threads.create()
 
+    # Save the assistant thread to a text file, so we can use it in our
+    # scheduled image cronjob
+    with open("assistant_thread.txt", "w") as assistant_thread_file:
+        assistant_thread_file.write(assistant_thread.id)
+
     # test_input = "An interesting fact"
     # send_to_assistant(client, assistant, assistant_thread, test_input)
 
@@ -138,7 +143,7 @@ def main():
                 else:
                     helpers.play_audio("audio/hmm.mp3")
                     gpt.send_to_assistant(
-                        client, assistant, assistant_thread, recognised_speech
+                        client, assistant, assistant_thread.id, recognised_speech
                     )
             except speech_recognition.UnknownValueError:
                 print("Could not understand audio")

@@ -69,17 +69,19 @@ def generate_chatgpt_image(openai_client, user_text, assistant_output_text):
         helpers.display_image("resized.png")
 
 
-def send_to_assistant(openai_client, assistant, assistant_thread, input_text):
+def send_to_assistant(
+    openai_client, assistant, assistant_thread_id, input_text, text_to_speech=True
+):
     """
     Send text to an OpenAI Assistant and gets the response to pass to Whisper
     and Dall-E.
     """
     message = openai_client.beta.threads.messages.create(
-        thread_id=assistant_thread.id, role="user", content=input_text
+        thread_id=assistant_thread_id, role="user", content=input_text
     )
 
     run = openai_client.beta.threads.runs.create(
-        thread_id=assistant_thread.id,
+        thread_id=assistant_thread_id,
         assistant_id=assistant.id,
     )
 
@@ -92,7 +94,7 @@ def send_to_assistant(openai_client, assistant, assistant_thread, input_text):
             timeout_counter = 0
             break
         run = openai_client.beta.threads.runs.retrieve(
-            thread_id=assistant_thread.id,
+            thread_id=assistant_thread_id,
             run_id=run.id,
         )
         if run.status == "completed":
@@ -105,7 +107,7 @@ def send_to_assistant(openai_client, assistant, assistant_thread, input_text):
             "Sorry, it looks like something went wrong. Try again in a moment or two."
         )
     else:
-        thread_messages = openai_client.beta.threads.messages.list(assistant_thread.id)
+        thread_messages = openai_client.beta.threads.messages.list(assistant_thread_id)
         # The most recent assistant's response will be the first item in the list
         assistant_output = thread_messages.data[0].content[0].text.value
     print(assistant_output)
@@ -118,4 +120,5 @@ def send_to_assistant(openai_client, assistant, assistant_thread, input_text):
     image_thread.should_abort_immediately = True
     image_thread.start()
 
-    whisper_text_to_speech(openai_client, assistant_output)
+    if text_to_speech:
+        whisper_text_to_speech(openai_client, assistant_output)
