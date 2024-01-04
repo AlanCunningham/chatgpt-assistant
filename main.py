@@ -28,7 +28,7 @@ def main():
 
     # List the recording devices
     for i, device in enumerate(PvRecorder.get_available_devices()):
-        print("Device %d: %s" % (i, device))
+        logging.info("Device %d: %s" % (i, device))
 
     running = True
     wait_for_hotword = True
@@ -39,7 +39,7 @@ def main():
         if wait_for_hotword:
             if first_session_listen:
                 # Hotword setup
-                print(pvporcupine.KEYWORDS)
+                logging.info(pvporcupine.KEYWORDS)
                 pvporcupine_api_key = settings.pvporcupine_api_key
                 handle = pvporcupine.create(
                     access_key=pvporcupine_api_key, keywords=["porcupine"]
@@ -50,7 +50,7 @@ def main():
                 )
                 hotword_recorder.start()
 
-                print("Waiting for hotword...")
+                logging.info("Waiting for hotword...")
                 first_session_listen = False
 
             # Wait for the hotword
@@ -58,7 +58,7 @@ def main():
             result = handle.process(pcm)
             if result >= 0:
                 # Hotword detected
-                print("Detected!")
+                logging.info("Detected!")
                 wait_for_hotword = False
                 hotword_recorder.delete()
                 handle.delete()
@@ -72,12 +72,12 @@ def main():
             microphone = speech_recognition.Microphone()
             speech_result = speech_recognition.Recognizer()
 
-            print("Ready for input:")
+            logging.info("Ready for input:")
             with microphone as source:
                 audio = speech_result.listen(source)
             try:
                 recognised_speech = speech_result.recognize_google(audio)
-                print(recognised_speech)
+                logging.info(f"Recognised speech: {recognised_speech}")
                 wait_for_hotword = True
                 first_session_listen = True
 
@@ -146,11 +146,11 @@ def main():
                         client, assistant, assistant_thread.id, recognised_speech
                     )
             except speech_recognition.UnknownValueError:
-                print("Could not understand audio")
+                logging.info("Could not understand audio")
                 wait_for_hotword = True
                 first_session_listen = True
             except speech_recognition.RequestError as e:
-                print(f"Error: {e}")
+                logging.info(f"Error: {e}")
 
 
 if __name__ == "__main__":

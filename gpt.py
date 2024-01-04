@@ -1,6 +1,7 @@
 import helpers
 import prompts
 import settings
+import logging
 import requests
 import shutil
 import threading
@@ -17,7 +18,7 @@ def get_assistant(openai_client):
     Returns an already-created Assistant.
     """
     assistant = openai_client.beta.assistants.retrieve(settings.openai_assistant_id)
-    print(assistant)
+    logging.info(assistant)
     return assistant
 
 
@@ -25,7 +26,6 @@ def whisper_text_to_speech(openai_client, text_to_say):
     """
     Text to speech using OpenAI's Whisper API.
     """
-    print("whisper_text_to_speech")
     speech_file_path = Path(__file__).parent / "speech.mp3"
     response = openai_client.audio.speech.create(
         model="tts-1", voice="nova", input=text_to_say
@@ -39,7 +39,7 @@ def generate_chatgpt_image(openai_client, user_text, assistant_output_text):
     Generates a dall-e image based on given text (usually the output of the
     GPT assistant)
     """
-    print("Generating image")
+    logging.info("Generating image")
     image_prompt = (
         f"{prompts.assistant_image_prompt}\n{user_text}\n{assistant_output_text}"
     )
@@ -52,7 +52,7 @@ def generate_chatgpt_image(openai_client, user_text, assistant_output_text):
         n=1,
     )
     image_url = response.data[0].url
-    print(image_url)
+    logging.info(image_url)
 
     # Download the image
     response = requests.get(image_url, stream=True)
@@ -90,7 +90,7 @@ def send_to_assistant(
     timeout_counter = 0
     while not run_completed:
         if timeout_counter >= timeout_limit:
-            print("Timeout exceeded")
+            logging.info("Timeout exceeded")
             timeout_counter = 0
             break
         run = openai_client.beta.threads.runs.retrieve(
@@ -110,7 +110,7 @@ def send_to_assistant(
         thread_messages = openai_client.beta.threads.messages.list(assistant_thread_id)
         # The most recent assistant's response will be the first item in the list
         assistant_output = thread_messages.data[0].content[0].text.value
-    print(assistant_output)
+    logging.info(f"Assistant output: {assistant_output}")
 
     global image_thread
     image_thread = threading.Thread(
