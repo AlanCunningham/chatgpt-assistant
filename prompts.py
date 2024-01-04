@@ -4,6 +4,5 @@ can show the user:
 """
 
 scheduled_image_prompt = """
-Create an image that will look good on a display or photo frame in the home.
-Insert things I've mentioned in previous messages.
+List what topics we've talked about recently.
 """
