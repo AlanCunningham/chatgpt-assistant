@@ -123,6 +123,7 @@ def main():
                     for send_image_phrase in send_image_phrases
                 ):
                     # Send the last created dall-e image to Telegram
+                    helpers.display_image("resized.png")
                     helpers.play_audio("audio/sending_image.mp3")
                     apprise_sender.send("", "", "dalle_image.png")
 
@@ -143,8 +144,8 @@ def main():
                     current_image = random_image
 
                 else:
-                    helpers.play_audio("audio/hmm.mp3")
                     helpers.display_image("assistant_images/thinking.png")
+                    helpers.play_audio("audio/hmm.mp3")
                     gpt.send_to_assistant(
                         client, assistant, assistant_thread.id, recognised_speech
                     )
