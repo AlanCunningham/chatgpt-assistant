@@ -68,7 +68,8 @@ def main():
                 "audio/what.mp3",
                 "audio/yes_question.mp3",
             ]
-            helpers.play_audio(random.choice(hotword_responses))
+            #helpers.play_audio(random.choice(hotword_responses))
+            helpers.display_image("assistant_images/listening.png")
             microphone = speech_recognition.Microphone()
             speech_result = speech_recognition.Recognizer()
 
@@ -114,7 +115,8 @@ def main():
                         "audio/oh_ok.mp3",
                         "audio/alright_then.mp3",
                     ]
-                    helpers.play_audio(random.choice(end_conversation_phrases))
+                    #helpers.play_audio(random.choice(end_conversation_phrases))
+                    helpers.display_image("resized.png")
 
                 elif any(
                     send_image_phrase in recognised_speech
@@ -142,11 +144,13 @@ def main():
 
                 else:
                     helpers.play_audio("audio/hmm.mp3")
+                    helpers.display_image("assistant_images/thinking.png")
                     gpt.send_to_assistant(
                         client, assistant, assistant_thread.id, recognised_speech
                     )
             except speech_recognition.UnknownValueError:
                 logging.info("Could not understand audio")
+                helpers.display_image("resized.png")
                 wait_for_hotword = True
                 first_session_listen = True
             except speech_recognition.RequestError as e:
