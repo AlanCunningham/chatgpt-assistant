@@ -29,6 +29,8 @@ ChatGPT in the current session.  Sessions are recreated on application restarts.
 This project requires an OpenAI API key to make the requests to ChatGPT Assistant, Whisper, and Dall-E.  **These do cost money** - the amount of which
 may change over time.  As of 26th January 2024, I find each request costs approximately £0.04p.  Image generation with Dall-E 3 is the bulk of the cost.
 
+You will need to create a [ChatGPT Assistant](https://platform.openai.com/docs/assistants/overview) and save `the assistant_id` to settings.py.
+
 You will also need a [porcupine API key](https://picovoice.ai/platform/porcupine/).  While porcupine hotword detection is handled offline, it looks like
 the API key limits the amount of devices you can run it on at the same time.  API usage is free for at least one device.
 
@@ -65,7 +67,7 @@ $ source venv/bin/activate
 (venv) $ pip install -r requirements.txt
 ```
 
-Enter your Open AI and porcupine API keys into settings.py in the designated sections. Optionally, you can also provide a chat service (such as Telegram)
+Enter your Open AI, your ChatGPT Assistant `assistant_id`, and porcupine API keys into settings.py in the designated sections. Optionally, you can also provide a chat service (such as Telegram)
 if you want to be able to send generated images to yourself.  **Make sure not to commit any of these keys in this file.**
 
 Start the program:
