@@ -7,8 +7,8 @@ and image generation (using Dall-E).
 
 ## Overview and features
 The display behaves a bit like a Google Home display, but with ChatGPT and Dall-E.
-- Hotword activation is handled offline by [porcupine](https://github.com/Picovoice/porcupine).  Saying one of the included hotwords, such
-as "Porcupine", activates the display and starts listening for input.
+- Hotword activation is handled offline by [porcupine](https://github.com/Picovoice/porcupine).  Saying included hotword, "Porcupine",
+activates the display and starts listening for input.
 - Speech is then recognised by Google text to speech.
 - The speech input is sent to the ChatGPT Assistant API.
 - The ChatGPT output is sent to the OpenAI Whisper API, to get high quality speech synthesis. This is then played on the display's speakers.
@@ -85,3 +85,4 @@ Start the program:
 ```
 (venv) $ python main.py
 ```
+Say "Porcupine" to activate the display to start listening to input.
