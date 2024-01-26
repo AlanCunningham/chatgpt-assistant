@@ -3,6 +3,8 @@
 A ChatGPT assistant connected to a small Raspberry Pi display, with voice activation (using [porcupine](https://github.com/Picovoice/porcupine))
 and image generation (using Dall-E).
 
+![image](https://github.com/AlanCunningham/chatgpt-assistant/assets/9663408/74424f3f-2209-4c42-8904-15d3c6e50b35)
+
 ## Overview and features
 The display behaves a bit like a Google Home display, but with ChatGPT and Dall-E.
 - Hotword activation is handled offline by [porcupine](https://github.com/Picovoice/porcupine).  Saying one of the included hotwords, such
