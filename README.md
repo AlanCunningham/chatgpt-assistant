@@ -32,7 +32,7 @@ This project requires an OpenAI API key to make the requests to ChatGPT Assistan
 may change over time.  As of 26th January 2024, I find each time I use the display costs approximately £0.04p.  Image generation with Dall-E 3 is the bulk
 of the cost.
 
-You will need to create a [ChatGPT Assistant](https://platform.openai.com/docs/assistants/overview) and save `the assistant_id` to settings.py.  As part
+You will need to create a [ChatGPT Assistant](https://platform.openai.com/docs/assistants/overview) and save the `assistant_id` to settings.py.  As part
 of this process, you will set a prompt on the ChatGPT Assistant website.  The prompt I've set up is:
 
 > You are a helpful voice assistant.  You are based in [location and country].
