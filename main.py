@@ -75,7 +75,7 @@ def main():
 
             logging.info("Ready for input:")
             with microphone as source:
-                audio = speech_result.listen(source)
+                audio = speech_result.listen(source, phrase_time_limit=10)
             try:
                 recognised_speech = speech_result.recognize_google(audio)
                 logging.info(f"Recognised speech: {recognised_speech}")
