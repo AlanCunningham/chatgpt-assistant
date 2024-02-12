@@ -3,7 +3,7 @@ openai_assistant_id = ""
 
 pvporcupine_api_key= ""
 
-# The list of services to notify when we get bank account details to report
+# The list of services to send images to
 apprise_services = [
     "",
 ]
