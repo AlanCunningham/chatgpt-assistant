@@ -4,5 +4,5 @@ can show the user:
 """
 
 scheduled_image_prompt = """
-Create a scene out of the topics we've talked about recently.
+Create a scene out of the topics and descriptions we've talked about recently.
 """
