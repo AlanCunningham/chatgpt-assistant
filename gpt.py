@@ -76,8 +76,17 @@ def send_to_assistant(
     Send text to an OpenAI Assistant and gets the response to pass to Whisper
     and Dall-E.
     """
+
+    # Encourage the GPT3 response to be brief. This is usually set on
+    # the assistant prompt, however I've found responses can still be
+    # rather long.
+    brief_prompt = "Remember to keep responses brief."
+    amended_input_text = f"{input_text}\n{brief_prompt}"
+
+    logging.info(f"Input text: {amended_input_text}")
+
     message = openai_client.beta.threads.messages.create(
-        thread_id=assistant_thread_id, role="user", content=input_text
+        thread_id=assistant_thread_id, role="user", content=amended_input_text
     )
 
     run = openai_client.beta.threads.runs.create(
