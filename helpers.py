@@ -1,6 +1,7 @@
 import vlc
 import subprocess
 import time
+import base64
 
 
 def play_audio(audio_file_path):
@@ -23,3 +24,11 @@ def display_image(image_file_path):
     subprocess.call(f"sudo killall -15 fbi", shell=True)
     # Display the new image
     subprocess.call(f"sudo fbi -T 1 {image_file_path} --noverbose &", shell=True)
+
+
+def encode_image(image_path):
+  """
+  Function to encode images. Used for the daily bird summary custom command.
+  """
+  with open(image_path, "rb") as image_file:
+    return base64.b64encode(image_file.read()).decode('utf-8')

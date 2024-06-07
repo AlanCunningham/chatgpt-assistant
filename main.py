@@ -80,7 +80,7 @@ def main():
                 # Check if the recognised speech contains the keyword to run
                 # a custom command.  If not, then send the recognised speech
                 # to ChatGPT.
-                if custom_commands.run_command(recognised_speech):
+                if custom_commands.run_command(client, assistant, assistant_thread.id, recognised_speech):
                     logging.info("Running custom command")
                 else:
                     helpers.display_image("assistant_images/thinking.png")

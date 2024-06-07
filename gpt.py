@@ -131,3 +131,37 @@ def send_to_assistant(
 
     if text_to_speech:
         whisper_text_to_speech(openai_client, assistant_output)
+
+
+def send_image_to_chatgpt(base64_image, prompt):
+    """
+    Sends an image to ChatGPT Vision API for analysis. The Assistant API doesn't
+    support images yet, so this workaround until then.
+    """
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {settings.openai_api_key}"
+    }
+
+    payload = {
+        "model": "gpt-4o",
+        "messages": [
+            {
+            "role": "user",
+            "content": [
+                {
+                "type": "text",
+                "text": prompt
+                },
+                {
+                "type": "image_url",
+                "image_url": {
+                    "url": f"data:image/jpeg;base64,{base64_image}"
+                }
+                }
+            ]
+            }
+        ],
+    }
+    response = requests.post("https://api.openai.com/v1/chat/completions", headers=headers, json=payload)
+    return response.json()["choices"][0]["message"]["content"]
