@@ -7,3 +7,5 @@ pvporcupine_api_key= ""
 apprise_services = [
     "",
 ]
+
+bird_net_pi_ip_address = ""
