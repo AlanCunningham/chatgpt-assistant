@@ -29,7 +29,7 @@ ChatGPT in the current session.  Sessions are recreated on application restarts.
 
 ## API keys
 This project requires an OpenAI API key to make the requests to ChatGPT Assistant, Whisper, and Dall-E.  **These do cost money** - the amount of which
-may change over time.  As of 26th January 2024, I find each time I use the display costs approximately £0.04p.  Image generation with Dall-E 3 is the bulk
+may change over time.  Image generation with Dall-E 3 is the bulk
 of the cost.
 
 You will need to create a [ChatGPT Assistant](https://platform.openai.com/docs/assistants/overview) and save the `assistant_id` to settings.py.  As part
