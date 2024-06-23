@@ -11,7 +11,7 @@ The display behaves a bit like a Google Home display, but with ChatGPT and Dall-
 activates the display and starts listening for input.
 - Speech is then recognised by Google text to speech.
 - The speech input is sent to the ChatGPT Assistant API.
-- The ChatGPT output is sent to the OpenAI Whisper API, to get high quality speech synthesis. This is then played on the display's speakers.
+- The ChatGPT output is sent to the OpenAI speech synthesis API. This is then played on the display's speakers.
 - Meanwhile, both the user input and ChatGPT output is sent to Dall-E 3.  The output image is downloaded, resized for my display (800x480), and
 displayed to the user.
 
