@@ -95,7 +95,7 @@ def send_to_assistant(
     )
 
     run_completed = False
-    timeout_limit = 10
+    timeout_limit = 300
     timeout_counter = 0
     while not run_completed:
         if timeout_counter >= timeout_limit:
