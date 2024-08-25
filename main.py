@@ -41,7 +41,7 @@ def main():
                 )
 
                 hotword_recorder = PvRecorder(
-                    frame_length=handle.frame_length, device_index=3
+                    frame_length=handle.frame_length, device_index=0
                 )
                 hotword_recorder.start()
 
