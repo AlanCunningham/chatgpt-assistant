@@ -4,7 +4,8 @@ can show the user:
 """
 
 scheduled_image_prompt = """
-Create a scene out of the topics and descriptions we've talked about recently.
+Create a movie poster out of the topics and descriptions we've talked about recently.
+Don't assume subsequent requests are to create movie posters unless exlicitly specified.
 """
 
 bird_summary_prompt = """
