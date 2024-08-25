@@ -122,8 +122,12 @@ def run_command(openai_client, assistant, assistant_thread, recognised_speech):
             # Convert the image to base64
             daily_chart_base64 = helpers.encode_image("bird_chart.png")
 
+            # Append the recognised speech to the bird summary prompt, so the user can ask for the
+            # response as a poem etc
+            modified_bird_summary_prompt = f"{prompts.bird_summary_prompt}\n{recognised_speech}"
+
             # Send to ChatGPT-4o Vision
-            gpt_response = gpt.send_image_to_chatgpt(daily_chart_base64, prompts.bird_summary_prompt)
+            gpt_response = gpt.send_image_to_chatgpt(daily_chart_base64, modified_bird_summary_prompt)
 
             # Now send the response to the Assistant, so the response gets added
             # to the Assistant's memory and we can generate an image. First we'll
