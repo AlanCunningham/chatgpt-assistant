@@ -1,7 +1,10 @@
 import gpt
+import helpers
 import prompts
 import settings
 import logging
+import os
+import random
 from openai import OpenAI
 
 
@@ -25,6 +28,12 @@ def scheduled_image():
     )
 
 
+def display_random_saved_image():
+    # Pick a random saved image and display it on the screen
+    images = os.listdir("saved_images")
+    random_image = random.choice(images)
+    helpers.display_image(f"saved_images/{random_image}")
+
 if __name__ == "__main__":
     logging.basicConfig(
         format="%(asctime)s %(filename)s %(lineno)d - %(message)s",
@@ -34,4 +43,5 @@ if __name__ == "__main__":
             logging.StreamHandler(),
         ],
     )
-    scheduled_image()
+    #scheduled_image()
+    display_random_saved_image()
