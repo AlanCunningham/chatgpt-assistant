@@ -133,7 +133,7 @@ def run_command(openai_client, assistant, assistant_thread, recognised_speech):
             # to the Assistant's memory and we can generate an image. First we'll
             # tweak what we want the Assistant to do:
             amended_prompt = f"""
-                The following is a summary of birds that have visited my garden
+                {recognised_speech}. The following is a summary of birds that have visited my garden
                 today. Repeat it exactly as it is written:
                 {gpt_response}
             """
