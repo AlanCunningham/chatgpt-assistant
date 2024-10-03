@@ -50,8 +50,7 @@ def run_command(openai_client, assistant, assistant_thread, recognised_speech):
     # This command requires all of these phrases to be in the
     # recognised speech.
     bird_summary_phrases = [
-        "bird",
-        "summary"
+        "birds",
     ]
 
     # List of phrases to retrieve a weather update from the garden weather
@@ -101,7 +100,7 @@ def run_command(openai_client, assistant, assistant_thread, recognised_speech):
         current_image = random_image
         return True
 
-    elif all(
+    elif any(
         bird_summary_phrase in recognised_speech
         for bird_summary_phrase in bird_summary_phrases
     ):
@@ -139,8 +138,8 @@ def run_command(openai_client, assistant, assistant_thread, recognised_speech):
             # to the Assistant's memory and we can generate an image. First we'll
             # tweak what we want the Assistant to do:
             amended_prompt = f"""
-                {recognised_speech}. The following is a summary of birds that have visited my garden
-                today. Repeat it exactly as it is written:
+                {recognised_speech}. Repeat this fun summary of birds that have visited my garden
+                today.
                 {gpt_response}
             """
             gpt.send_to_assistant(
