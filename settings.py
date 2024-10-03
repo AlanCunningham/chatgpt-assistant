@@ -9,3 +9,5 @@ apprise_services = [
 ]
 
 bird_net_pi_ip_address = ""
+
+weather_station_host = ""

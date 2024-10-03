@@ -54,6 +54,13 @@ def run_command(openai_client, assistant, assistant_thread, recognised_speech):
         "summary"
     ]
 
+    # List of phrases to retrieve a weather update from the garden weather
+    # station
+    weather_summary_phrases = [
+        "weather",
+        "summary",
+    ]
+
     if any(cancel_phrase in recognised_speech for cancel_phrase in cancel_phrases):
         # Cancel the conversation
         logging.info("Custom command: cancel")
@@ -143,6 +150,24 @@ def run_command(openai_client, assistant, assistant_thread, recognised_speech):
             return True
         else:
             return False
+
+    elif all(
+        weather_summary_phrase in recognised_speech
+        for weather_summary_phrase in weather_summary_phrases
+    ):
+        logging.info("Custom command: Weather summary")
+        helpers.display_image("assistant_images/thinking.png")
+        helpers.play_audio("audio/hmm.mp3")
+        weather_station_response = requests.get(settings.weather_station_host).json()
+        weather_prompt = f"""
+            {recognised_speech}. Give me a fun weather summary based on the following information:
+            {weather_station_response['temperature']}°C. {weather_station_response['weather_title']}. {weather_station_response['weather_forecast']}
+        """
+        logging.info(weather_station_response)
+        gpt.send_to_assistant(
+            openai_client, assistant, assistant_thread, weather_prompt
+        )
+        return True
 
     else:
         # The recognised speech didn't contain any keywords that
