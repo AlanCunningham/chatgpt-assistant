@@ -159,7 +159,7 @@ def run_command(openai_client, assistant, assistant_thread, recognised_speech):
         weather_station_response = requests.get(settings.weather_station_host).json()
         weather_prompt = f"""
             {recognised_speech}. Give me a fun weather summary based on the following information:
-            {weather_station_response['temperature']}°. {weather_station_response['weather_title']}. {weather_station_response['weather_forecast']}
+            It's {weather_station_response['temperature']} degrees C. {weather_station_response['weather_title']}. {weather_station_response['weather_forecast']}
         """
         logging.info(weather_station_response)
         gpt.send_to_assistant(
