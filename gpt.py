@@ -6,6 +6,7 @@ import requests
 import shutil
 import threading
 import time
+from datetime import datetime
 from PIL import Image
 from pathlib import Path
 
@@ -80,8 +81,9 @@ def send_to_assistant(
     # Encourage the GPT3 response to be brief. This is usually set on
     # the assistant prompt, however I've found responses can still be
     # rather long.
+    current_datetime = datetime.now().strftime("%c")
     brief_prompt = "Remember to keep responses brief."
-    amended_input_text = f"{input_text}\n{brief_prompt}"
+    amended_input_text = f"The date and time is {current_datetime}.\n{input_text}\n{brief_prompt}"
 
     logging.info(f"Input text: {amended_input_text}")
 
