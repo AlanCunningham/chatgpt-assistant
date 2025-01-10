@@ -160,6 +160,10 @@ def run_command(openai_client, assistant, assistant_thread, recognised_speech):
         weather_prompt = f"""
             {recognised_speech}. Give me a fun weather summary based on the following information:
             It's {weather_station_response['temperature']} degrees C. {weather_station_response['weather_title']}. {weather_station_response['weather_forecast']}
+
+            For the following information, don't refer to the exact levels - only give high level summaries/overviews:
+            - The light levels are {weather_station_response['light_level']} lux.
+            - The barometric pressure is {weather_station_response['pressure']} hectopascals.
         """
         logging.info(weather_station_response)
         gpt.send_to_assistant(
