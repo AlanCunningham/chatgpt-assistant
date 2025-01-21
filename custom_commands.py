@@ -14,6 +14,15 @@ from datetime import datetime
 
 current_image = None
 
+cancel_phrases = [
+    "nevermind",
+    "never mind",
+    "stop",
+    "cancel that",
+    "cancel",
+    "nothing",
+    "forget it",
+]
 
 def run_command(openai_client, assistant, assistant_thread, recognised_speech):
     """
@@ -24,15 +33,15 @@ def run_command(openai_client, assistant, assistant_thread, recognised_speech):
     """
     # List of phrases to cancel the conversation before making
     # requests to ChatGPT
-    cancel_phrases = [
-        "nevermind",
-        "never mind",
-        "stop",
-        "cancel that",
-        "cancel",
-        "nothing",
-        "forget it",
-    ]
+    #cancel_phrases = [
+    #    "nevermind",
+    #    "never mind",
+    #    "stop",
+    #    "cancel that",
+    #    "cancel",
+    #    "nothing",
+    #    "forget it",
+    #]
 
     # List of phrases to send the dall-e image to telegram
     send_image_phrases = [

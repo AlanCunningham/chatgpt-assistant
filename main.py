@@ -57,6 +57,7 @@ def main():
                 wait_for_hotword = False
                 hotword_recorder.delete()
                 handle.delete()
+                helpers.display_image("assistant_images/listening.png")
         else:
             # Hotword detected, continue with speech recognition
             hotword_responses = [
@@ -64,7 +65,7 @@ def main():
                 "audio/yes_question.mp3",
             ]
             #helpers.play_audio(random.choice(hotword_responses))
-            helpers.display_image("assistant_images/listening.png")
+            #helpers.display_image("assistant_images/listening.png")
             microphone = speech_recognition.Microphone()
             speech_result = speech_recognition.Recognizer()
 
@@ -74,14 +75,18 @@ def main():
             try:
                 recognised_speech = speech_result.recognize_google(audio)
                 logging.info(f"Recognised speech: {recognised_speech}")
-                wait_for_hotword = True
-                first_session_listen = True
+                #wait_for_hotword = True
+                #first_session_listen = True
 
                 # Check if the recognised speech contains the keyword to run
                 # a custom command.  If not, then send the recognised speech
                 # to ChatGPT.
                 if custom_commands.run_command(client, assistant, assistant_thread.id, recognised_speech):
                     logging.info("Running custom command")
+                    if recognised_speech in custom_commands.cancel_phrases:
+                        # Reset speech recognition and wait for the hotword
+                        wait_for_hotword = True
+                        first_session_listen = True
                 else:
                     helpers.display_image("assistant_images/thinking.png")
                     helpers.play_audio("audio/hmm.mp3")
