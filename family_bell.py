@@ -28,7 +28,8 @@ def run_through_steps(input_text):
     global is_family_bell_active, current_bell_time, current_step
     confirmation_phrases = [
         "start",
-        "ready" "yes",
+        "ready",
+        "yes",
         "yeah",
         "let's go",
         "next",
