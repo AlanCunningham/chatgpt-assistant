@@ -1,24 +1,17 @@
 import custom_commands
+import family_bell
 import gpt
 import helpers
 import logging
 import settings
 import speech_recognition
+import threading
 import pvporcupine
 from pvrecorder import PvRecorder
-from openai import OpenAI
 
 
 def main():
-    client = OpenAI(api_key=settings.openai_api_key)
-    assistant = gpt.get_assistant(client)
-    assistant_thread = client.beta.threads.create()
-
-    # Save the assistant thread to a text file, so we can use it in our
-    # scheduled image cronjob
-    with open("assistant_thread.txt", "w") as assistant_thread_file:
-        assistant_thread_file.write(assistant_thread.id)
-
+    gpt.setup()
     # test_input = "An interesting fact"
     # send_to_assistant(client, assistant, assistant_thread, test_input)
 
@@ -29,6 +22,13 @@ def main():
     running = True
     wait_for_hotword = True
     first_session_listen = True
+
+    # Start the family bell timer check
+    family_bell_check_thread = threading.Thread(
+        target=family_bell.check_time,
+    )
+    family_bell_check_thread.should_abort_immediately = True
+    family_bell_check_thread.start()
 
     while running:
         if wait_for_hotword:
@@ -51,6 +51,7 @@ def main():
             # Wait for the hotword
             pcm = hotword_recorder.read()
             result = handle.process(pcm)
+
             if result >= 0:
                 # Hotword detected
                 logging.info("Detected!")
@@ -60,12 +61,6 @@ def main():
                 helpers.display_image("assistant_images/listening.png")
         else:
             # Hotword detected, continue with speech recognition
-            hotword_responses = [
-                "audio/what.mp3",
-                "audio/yes_question.mp3",
-            ]
-            #helpers.play_audio(random.choice(hotword_responses))
-            #helpers.display_image("assistant_images/listening.png")
             microphone = speech_recognition.Microphone()
             speech_result = speech_recognition.Recognizer()
 
@@ -73,29 +68,37 @@ def main():
             with microphone as source:
                 audio = speech_result.listen(source, phrase_time_limit=10)
             try:
+                # Speech recognised
                 recognised_speech = speech_result.recognize_google(audio)
                 logging.info(f"Recognised speech: {recognised_speech}")
-                #wait_for_hotword = True
-                #first_session_listen = True
+                # wait_for_hotword = True
+                # first_session_listen = True
 
                 # Check if the recognised speech contains the keyword to run
-                # a custom command.  If not, then send the recognised speech
-                # to ChatGPT.
-                if custom_commands.run_command(client, assistant, assistant_thread.id, recognised_speech):
+                # a custom command.
+                if custom_commands.run_command(recognised_speech):
                     logging.info("Running custom command")
                     if recognised_speech in custom_commands.cancel_phrases:
                         # Reset speech recognition and wait for the hotword
                         wait_for_hotword = True
                         first_session_listen = True
+
+                # Check if the family bell is active
+                elif family_bell.is_family_bell_active:
+                    helpers.display_image("assistant_images/family_bell.png")
+                    family_bell.run_through_steps(recognised_speech)
+
+                # Normal usage - send the request to ChatGPT
                 else:
                     helpers.display_image("assistant_images/thinking.png")
                     helpers.play_audio("audio/hmm.mp3")
-                    gpt.send_to_assistant(
-                        client, assistant, assistant_thread.id, recognised_speech
-                    )
+                    gpt.send_to_assistant(recognised_speech)
             except speech_recognition.UnknownValueError:
                 logging.info("Could not understand audio")
-                helpers.display_image("resized.png")
+                if family_bell.is_family_bell_active:
+                    helpers.display_image("assistant_images/family_bell.png")
+                else:
+                    helpers.display_image("resized.png")
                 wait_for_hotword = True
                 first_session_listen = True
             except speech_recognition.RequestError as e:

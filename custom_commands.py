@@ -24,7 +24,7 @@ cancel_phrases = [
     "forget it",
 ]
 
-def run_command(openai_client, assistant, assistant_thread, recognised_speech):
+def run_command(recognised_speech):
     """
     Runs a custom command if certain keywords are in the recognised
     speech.  Returns True if a custom command is run, otherwise False so
@@ -151,9 +151,7 @@ def run_command(openai_client, assistant, assistant_thread, recognised_speech):
                 today.
                 {gpt_response}
             """
-            gpt.send_to_assistant(
-                openai_client, assistant, assistant_thread, amended_prompt
-            )
+            gpt.send_to_assistant(amended_prompt)
             return True
         else:
             return False
@@ -175,9 +173,7 @@ def run_command(openai_client, assistant, assistant_thread, recognised_speech):
             - The barometric pressure is {weather_station_response['pressure']} hectopascals.
         """
         logging.info(weather_station_response)
-        gpt.send_to_assistant(
-            openai_client, assistant, assistant_thread, weather_prompt
-        )
+        gpt.send_to_assistant(weather_prompt)
         return True
 
     else:
