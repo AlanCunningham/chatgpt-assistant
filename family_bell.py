@@ -37,6 +37,7 @@ def run_through_steps(input_text):
         "done",
         "all done",
         "finished",
+        "already",
     ]
     negative_phrases = [
         "no",
