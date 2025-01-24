@@ -86,6 +86,7 @@ def main():
                 # Check if the family bell is active
                 elif family_bell.is_family_bell_active:
                     helpers.display_image("assistant_images/family_bell.png")
+                    helpers.play_audio("audio/epiphany.m4a")
                     family_bell.run_through_steps(recognised_speech)
 
                 # Normal usage - send the request to ChatGPT
@@ -95,10 +96,7 @@ def main():
                     gpt.send_to_assistant(recognised_speech)
             except speech_recognition.UnknownValueError:
                 logging.info("Could not understand audio")
-                if family_bell.is_family_bell_active:
-                    helpers.display_image("assistant_images/family_bell.png")
-                else:
-                    helpers.display_image("resized.png")
+                helpers.display_image("resized.png")
                 wait_for_hotword = True
                 first_session_listen = True
             except speech_recognition.RequestError as e:

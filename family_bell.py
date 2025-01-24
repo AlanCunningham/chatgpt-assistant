@@ -10,13 +10,13 @@ current_step = 0
 schedule = {
     "18:30": {
         "title": "It's almost time for bed!",
-        "ending": "Wonderful! You're all ready for bed - enjoy your bedtime story, and good night.",
+        "ending": "You're all ready for bed - enjoy your bedtime story, and good night.",
         "steps": [
             "Brush your teeth and make sure they're all nice and clean.",
             "Put your pyjamas on.",
             "Think of something lovely that happened today.",
         ],
-        "prompt": "A fun picture of a cartoon little dinosaur, in his pyjamas, doing the following:",
+        "prompt": "A fun picture of a little dinosaur, in his pyjamas, doing the following:",
     }
 }
 
@@ -66,7 +66,6 @@ def run_through_steps(input_text):
 
             image_prompt = f"{schedule[current_bell_time]['prompt']} {schedule[current_bell_time]['steps'][current_step]}"
             if current_step == 0:
-                helpers.play_audio("audio/epiphany.m4a")
                 announcement_start = (
                     "Great! Let's get started then! Your first step is to"
                 )
