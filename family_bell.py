@@ -111,7 +111,6 @@ def check_time():
 
     while True:
         now = str(datetime.now().strftime("%H:%M"))
-        print(f"Now: {now}")
         if any(now in schedule_time for schedule_time in schedule):
             # print(f"Schedule time: {schedule_time}")
             # Activate the family bell status
