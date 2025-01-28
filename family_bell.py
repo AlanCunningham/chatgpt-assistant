@@ -12,8 +12,9 @@ schedule = {
         "title": "It's almost time for bed!",
         "ending": "You're all ready for bed - enjoy your bedtime story, and good night.",
         "steps": [
+            "Have a bath. Don't forget Bath Monkey!",
+            "Put your pyjamas on",
             "Brush your teeth and make sure they're all nice and clean.",
-            "Put your pyjamas on.",
             "Think of something lovely that happened today.",
         ],
         "prompt": "A fun picture of a little dinosaur, in his pyjamas, doing the following:",
@@ -38,14 +39,11 @@ def run_through_steps(input_text):
         "all done",
         "finished",
         "already",
+        "first",
     ]
     negative_phrases = [
-        "no",
-        "nope",
         "stop",
         "cancel",
-        "never mind",
-        "nevermind",
     ]
     if any(
         confirmation_phrase in input_text
