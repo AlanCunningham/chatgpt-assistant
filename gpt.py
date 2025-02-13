@@ -6,6 +6,7 @@ import requests
 import shutil
 import threading
 import time
+import os
 from datetime import datetime
 from openai import OpenAI
 from PIL import Image
@@ -20,6 +21,7 @@ image_thread = None
 
 def setup():
     global client, assistant, assistant_thread
+    os.environ["OPENAI_API_KEY"] = settings.openai_api_key
     client = OpenAI(api_key=settings.openai_api_key)
     assistant = client.beta.assistants.retrieve(settings.openai_assistant_id)
     logging.info(assistant)

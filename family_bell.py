@@ -12,10 +12,9 @@ schedule = {
         "title": "It's almost time for bed!",
         "ending": "You're all ready for bed - enjoy your bedtime story, and good night.",
         "steps": [
-            "Have a bath. Don't forget Bath Monkey!",
-            "Put your pyjamas on",
+            "Put your pyjamas on.",
+            "Have a milk",
             "Brush your teeth and make sure they're all nice and clean.",
-            "Think of something lovely that happened today.",
         ],
         "prompt": "A fun picture of a little dinosaur, in his pyjamas, doing the following:",
     }
@@ -40,6 +39,7 @@ def run_through_steps(input_text):
         "finished",
         "already",
         "first",
+        "all ready",
     ]
     negative_phrases = [
         "stop",
@@ -49,6 +49,7 @@ def run_through_steps(input_text):
         confirmation_phrase in input_text
         for confirmation_phrase in confirmation_phrases
     ):
+        helpers.play_audio("audio/epiphany.m4a")
         if current_step > len(schedule[current_bell_time]["steps"]) - 1:
             # Ran through all steps, reset the family bell
             announcement = schedule[current_bell_time]["ending"]
@@ -84,6 +85,7 @@ def run_through_steps(input_text):
 
     elif any(negative_phrase in input_text for negative_phrase in negative_phrases):
         print("Stopping family bell")
+        gpt.whisper_text_to_speech("Stopping family bell")
         # Reset the family bell
         current_step = 0
         is_family_bell_active = False

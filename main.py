@@ -69,25 +69,28 @@ def main():
                 audio = speech_result.listen(source, phrase_time_limit=10)
             try:
                 # Speech recognised
-                recognised_speech = speech_result.recognize_google(audio)
+
+                recognised_speech = speech_result.recognize_openai(audio)
+                #recognised_speech = speech_result.recognize_google(audio)
                 logging.info(f"Recognised speech: {recognised_speech}")
                 # wait_for_hotword = True
                 # first_session_listen = True
 
                 # Check if the recognised speech contains the keyword to run
                 # a custom command.
-                if custom_commands.run_command(recognised_speech):
+
+                # Check if the family bell is active
+                if family_bell.is_family_bell_active:
+                    helpers.display_image("assistant_images/family_bell.png")
+                    family_bell.run_through_steps(recognised_speech)
+
+                # Custom commands
+                elif custom_commands.run_command(recognised_speech):
                     logging.info("Running custom command")
                     if recognised_speech in custom_commands.cancel_phrases:
                         # Reset speech recognition and wait for the hotword
                         wait_for_hotword = True
                         first_session_listen = True
-
-                # Check if the family bell is active
-                elif family_bell.is_family_bell_active:
-                    helpers.display_image("assistant_images/family_bell.png")
-                    helpers.play_audio("audio/epiphany.m4a")
-                    family_bell.run_through_steps(recognised_speech)
 
                 # Normal usage - send the request to ChatGPT
                 else:
