@@ -1,6 +1,7 @@
 from datetime import datetime
 import helpers
 import gpt
+import random
 import time
 
 is_family_bell_active = False
@@ -13,10 +14,10 @@ schedule = {
         "ending": "You're all ready for bed - enjoy your bedtime story, and good night.",
         "steps": [
             "Put your pyjamas on.",
-            "Have a milk",
+            "Have a lovely warm milk",
             "Brush your teeth and make sure they're all nice and clean.",
         ],
-        "prompt": "A fun picture of a little dinosaur, in his pyjamas, doing the following:",
+        "prompt": f"Choose an animal at random (real, mythical, or extinct) and generate a fun little picture of it, in his pyjamas, doing the following:",
     }
 }
 
@@ -68,7 +69,7 @@ def run_through_steps(input_text):
             image_prompt = f"{schedule[current_bell_time]['prompt']} {schedule[current_bell_time]['steps'][current_step]}"
             if current_step == 0:
                 announcement_start = (
-                    "Great! Let's get started then! Your first step is to"
+                    "Your first step is to"
                 )
 
             elif current_step == len(schedule[current_bell_time]["steps"]) - 1:
