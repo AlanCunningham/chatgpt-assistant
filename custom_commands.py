@@ -165,7 +165,7 @@ def run_command(recognised_speech):
         helpers.play_audio("audio/hmm.mp3")
         weather_station_response = requests.get(settings.weather_station_host).json()
         weather_prompt = f"""
-            {recognised_speech}. Give me a fun weather summary based on the following information:
+            {recognised_speech}. Caerleom is pronounced "Ker-leon". Give me a fun weather summary based on the following information:
             It's {weather_station_response['temperature']} degrees C. {weather_station_response['weather_title']}. {weather_station_response['weather_forecast']}
 
             For the following information, don't refer to the exact levels - only give high level summaries/overviews:
