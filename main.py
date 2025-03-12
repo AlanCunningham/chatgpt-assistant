@@ -58,20 +58,21 @@ def main():
                 wait_for_hotword = False
                 hotword_recorder.delete()
                 handle.delete()
-                helpers.display_image("assistant_images/listening.png")
         else:
             # Hotword detected, continue with speech recognition
             microphone = speech_recognition.Microphone()
             speech_result = speech_recognition.Recognizer()
 
-            logging.info("Ready for input:")
             with microphone as source:
+                helpers.display_image("assistant_images/ambient_sound.png")
+                speech_result.adjust_for_ambient_noise(source)
+                helpers.display_image("assistant_images/listening.png")
+                logging.info(f"Ready to listen (energy threshold: {speech_result.energy_threshold}")
                 audio = speech_result.listen(source, phrase_time_limit=10)
             try:
                 # Speech recognised
-
-                recognised_speech = speech_result.recognize_openai(audio)
-                #recognised_speech = speech_result.recognize_google(audio)
+                #recognised_speech = speech_result.recognize_openai(audio)
+                recognised_speech = speech_result.recognize_google(audio)
                 logging.info(f"Recognised speech: {recognised_speech}")
                 # wait_for_hotword = True
                 # first_session_listen = True
