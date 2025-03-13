@@ -42,6 +42,12 @@ def whisper_text_to_speech(text_to_say, insert_audio_path=False):
     reduces the delay between family bell audio and speech to text.
     """
     speech_file_path = Path(__file__).parent / "speech.mp3"
+
+    # The speech synthesis seems to have trouble saying "degrees celsius" when
+    # it sees °C (e.g. from the weather custom command). Replace °C with just
+    # the word "degrees"
+    text_to_say = text_to_say.replace("°C", " degrees")
+
     response = client.audio.speech.create(
         model="tts-1", voice="nova", input=text_to_say
     )
