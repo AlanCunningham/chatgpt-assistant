@@ -94,21 +94,17 @@ def _generate_chatgpt_image(user_text, assistant_output_text):
     )
 
     response = client.images.generate(
-        model="dall-e-3",
+        model="gpt-image-1",
         prompt=image_prompt,
         size="1024x1024",
-        quality="standard",
+        quality="medium",
         n=1,
     )
-    image_url = response.data[0].url
-    logging.info(image_url)
-
-    # Download the image
-    response = requests.get(image_url, stream=True)
-    if response.ok:
+    if response:
+        image_base64 = response.data[0].b64_json
+        image_bytes = base64.b64decode(image_base64)
         with open("dalle_image.png", "wb") as image_file:
-            response.raw.decode_content = True
-            shutil.copyfileobj(response.raw, image_file)
+            image_file.write(image_bytes)
 
         # Resize the image to display on the smaller, 800x480 display. This
         # doesn't maintain the aspect ratio.
