@@ -1,3 +1,4 @@
+import base64
 import helpers
 import prompts
 import settings
@@ -49,9 +50,34 @@ def whisper_text_to_speech(text_to_say, insert_audio_path=False):
     text_to_say = text_to_say.replace("°C", " degrees")
 
     response = client.audio.speech.create(
-        model="tts-1", voice="nova", input=text_to_say
+        model="tts-1", voice="fable", input=text_to_say
     )
     response.stream_to_file(speech_file_path)
+    if insert_audio_path:
+        helpers.play_audio(insert_audio_path)
+    helpers.play_audio(speech_file_path)
+
+
+def whisper_text_to_speech_test(text_to_say, insert_audio_path=False):
+    completion = client.chat.completions.create(
+        model="gpt-4o-audio-preview",
+        modalities=["text", "audio"],
+        audio={"voice": "fable", "format": "mp3"},
+        messages=[
+            {
+                "role": "system",
+                "content": "Say the following text exactly as is",
+            },
+            {
+                "role": "user",
+                "content": text_to_say,
+            }
+        ],
+    )
+    mp3_bytes = base64.b64decode(completion.choices[0].message.audio.data)
+    speech_file_path = Path(__file__).parent / "speech.mp3"
+    with open(speech_file_path, "wb") as f:
+        f.write(mp3_bytes)
     if insert_audio_path:
         helpers.play_audio(insert_audio_path)
     helpers.play_audio(speech_file_path)
