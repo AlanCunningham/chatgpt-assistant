@@ -83,6 +83,15 @@ def whisper_text_to_speech_test(text_to_say, insert_audio_path=False):
     helpers.play_audio(speech_file_path)
 
 
+def add_microphone_to_image():
+    print("Adding microphone to image")
+    image = Image.open("resized.png")
+    microphone_image = Image.open("assistant_images/microphone.png")
+    resized_microphone_image = microphone_image.resize((100, 100))
+    image.paste(resized_microphone_image)
+    image.save("resized_microphone.png")
+
+
 def _generate_chatgpt_image(user_text, assistant_output_text):
     """
     Generates a dall-e image based on given text (usually the output of the
@@ -112,6 +121,7 @@ def _generate_chatgpt_image(user_text, assistant_output_text):
         resized_image = image.resize((800, 480))
         resized_image.save("resized.png")
         helpers.display_image("resized.png")
+        add_microphone_to_image()
 
 
 def start_image_thread(input_text, assistant_output):
@@ -213,3 +223,7 @@ def send_image_to_chatgpt(base64_image, prompt):
     }
     response = requests.post("https://api.openai.com/v1/chat/completions", headers=headers, json=payload)
     return response.json()["choices"][0]["message"]["content"]
+
+
+if __name__ == "__main__":
+    add_microphone_to_image()

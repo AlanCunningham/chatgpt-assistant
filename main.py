@@ -66,7 +66,7 @@ def main():
             with microphone as source:
                 helpers.display_image("assistant_images/ambient_sound.png")
                 speech_result.adjust_for_ambient_noise(source)
-                helpers.display_image("assistant_images/listening.png")
+                helpers.display_image("resized_microphone.png")
                 logging.info(f"Ready to listen (energy threshold: {speech_result.energy_threshold}")
                 audio = speech_result.listen(source, phrase_time_limit=10)
             try:
