@@ -8,6 +8,23 @@ is_family_bell_active = False
 current_bell_time = ""
 current_step = 0
 
+art_styles = [
+    "cartoon",
+    "realistic",
+    "hand drawn",
+    "cute picture that would look nice in a nursery",
+    "drawn with crayons, imperfect, with some of the colouring going outside of the lines",
+    "a child's drawing (simple, scribbly, cute)",
+]
+
+animal_types = [
+    "a dog",
+    "a sheep",
+    "a cow",
+    "a dinosaur",
+    "an animal",
+]
+
 schedule = {
     "18:30": {
         "title": "It's almost time for bed!",
@@ -17,7 +34,6 @@ schedule = {
             "Have a lovely warm milk",
             "Brush your teeth and make sure they're all nice and clean.",
         ],
-        "prompt": f"Choose an animal at random (real, mythical, or extinct) and generate a fun little picture of it, in his pyjamas, doing the following:",
     }
 }
 
@@ -51,10 +67,11 @@ def run_through_steps(input_text):
         for confirmation_phrase in confirmation_phrases
     ):
         helpers.play_audio("audio/epiphany.m4a")
+        image_prompt = f"In the following art style ({random.choice(art_styles)}), generate a fun little picture of {random.choice(animal_types)}, doing the following:"
         if current_step > len(schedule[current_bell_time]["steps"]) - 1:
             # Ran through all steps, reset the family bell
             announcement = schedule[current_bell_time]["ending"]
-            image_prompt = f"{schedule[current_bell_time]['prompt']} {schedule[current_bell_time]['ending']}"
+            image_prompt = f"{image_prompt} {schedule[current_bell_time]['ending']}"
             current_step = 0
             is_family_bell_active = False
             current_bell_time = ""
@@ -63,10 +80,10 @@ def run_through_steps(input_text):
                 f"Current step: {current_step} | Number of steps: {len(schedule[current_bell_time]['steps']) - 1}"
             )
             print(
-                f"{schedule[current_bell_time]['prompt']} {schedule[current_bell_time]['steps'][current_step]}"
+                f"{schedule[current_bell_time]['steps'][current_step]}"
             )
 
-            image_prompt = f"{schedule[current_bell_time]['prompt']} {schedule[current_bell_time]['steps'][current_step]}"
+            image_prompt = f"{image_prompt} {schedule[current_bell_time]['steps'][current_step]}"
             if current_step == 0:
                 announcement_start = (
                     "Your first step is to"
@@ -81,6 +98,7 @@ def run_through_steps(input_text):
             announcement = f"{announcement_start} {schedule[current_bell_time]['steps'][current_step]}"
             current_step += 1
 
+        print(image_prompt)
         gpt.start_image_thread(image_prompt, "")
         gpt.whisper_text_to_speech(announcement)
 
